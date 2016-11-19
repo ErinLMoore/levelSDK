@@ -31,6 +31,22 @@ import java.util.Set;
 public class DashboardActivity extends AppCompatActivity {
     private static final String TAG = DashboardActivity.class.getSimpleName();
     private DeviceClient deviceClient;
+    private Spinner reporterSpinner;
+    private Spinner dataScaleSpinner;
+    private Spinner queryReporterSpinner;
+    private Spinner reporterActionSpinner;
+    private EditText sampleFrequency;
+    private CheckBox xaxis;
+    private CheckBox yaxis;
+    private CheckBox zaxis;
+    private CheckBox magnitude;
+    private EditText samplesPerRecord;
+    private EditText maxRecords;
+    private Button setUp;
+    private Button doIt, enableData, nukeData;
+    private TextView dataText, batteryLevel, batteryState;
+    private boolean dataOn = false;
+
     private DeviceObserverCallbacks callbacks = new DeviceObserverCallbacks() {
         @Override
         public void onBluetoothNotAvailable() {
@@ -69,7 +85,8 @@ public class DashboardActivity extends AppCompatActivity {
 
         @Override
         public void onData(RecordData data) {
-            Log.v(TAG, "onData");
+            Log.v(TAG, "onData: " + data.getData());
+            // dataText.setText( /* something?*/ );
         }
 
         @Override
@@ -161,21 +178,6 @@ public class DashboardActivity extends AppCompatActivity {
             });
         }
     };
-    private Spinner reporterSpinner;
-    private Spinner dataScaleSpinner;
-    private Spinner queryReporterSpinner;
-    private Spinner reporterActionSpinner;
-    private EditText sampleFrequency;
-    private CheckBox xaxis;
-    private CheckBox yaxis;
-    private CheckBox zaxis;
-    private CheckBox magnitude;
-    private EditText samplesPerRecord;
-    private EditText maxRecords;
-    private Button setUp;
-    private Button doIt, enableData, nukeData;
-    private TextView dataText, batteryLevel, batteryState;
-    private boolean dataOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
