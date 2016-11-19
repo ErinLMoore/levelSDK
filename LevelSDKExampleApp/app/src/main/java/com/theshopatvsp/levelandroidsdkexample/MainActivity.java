@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusView, codeView;
     private int acceptedCodes = 0;
     private DeviceClient deviceClient;
+    private String deviceId = "E792";
+
+
     private DeviceObserverCallbacks callbacks = new DeviceObserverCallbacks() {
         @Override
         public void onBluetoothNotAvailable() {
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            if( ++acceptedCodes >= 4 ) {
+            if (++acceptedCodes >= 4) {
                 startActivity(new Intent(MainActivity.this, DashboardActivity.class));
             }
         }
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     Log.v(TAG, "sending InitiateConnection Intent");
                     deviceClient.registerDeviceCallbacks(callbacks);
-                    deviceClient.connect("");
+                    deviceClient.connect(deviceId);
                 }
             }, 1000);
         }

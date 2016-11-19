@@ -1,7 +1,9 @@
 package com.theshopatvsp.levelandroidsdkexample;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,7 +63,9 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onDisconnect() {Log.v(TAG, "onDisconnect");}
+        public void onDisconnect() {
+            Log.v(TAG, "onDisconnect");
+        }
 
         @Override
         public void onData(RecordData data) {
@@ -79,7 +83,9 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onLedCodeDone() {Log.v(TAG, "onLedCodeDone");}
+        public void onLedCodeDone() {
+            Log.v(TAG, "onLedCodeDone");
+        }
 
         @Override
         public void onDeviceReady() {
@@ -107,19 +113,19 @@ public class DashboardActivity extends AppCompatActivity {
             samplesPerRecord.setText("" + config.getSamplesPerRecord());
             maxRecords.setText("" + config.getMaxNumberOfRecords());
 
-            if( (config.getDataFields() & DataFields.INCLUDE_X_AXIS.getBit()) > 0 ) {
+            if ((config.getDataFields() & DataFields.INCLUDE_X_AXIS.getBit()) > 0) {
                 xaxis.setChecked(true);
             }
 
-            if( (config.getDataFields() & DataFields.INCLUDE_Y_AXIS.getBit()) > 0 ) {
+            if ((config.getDataFields() & DataFields.INCLUDE_Y_AXIS.getBit()) > 0) {
                 yaxis.setChecked(true);
             }
 
-            if( (config.getDataFields() & DataFields.INCLUDE_Z_AXIS.getBit()) > 0 ) {
+            if ((config.getDataFields() & DataFields.INCLUDE_Z_AXIS.getBit()) > 0) {
                 zaxis.setChecked(true);
             }
 
-            if( (config.getDataFields() & DataFields.INCLUDE_MAGNITUDE.getBit()) > 0 ) {
+            if ((config.getDataFields() & DataFields.INCLUDE_MAGNITUDE.getBit()) > 0) {
                 magnitude.setChecked(true);
             }
         }
@@ -228,7 +234,7 @@ public class DashboardActivity extends AppCompatActivity {
                 String type = (String) queryReporterSpinner.getSelectedItem();
                 String action = (String) reporterActionSpinner.getSelectedItem();
 
-                if( action.equalsIgnoreCase("Query")) {
+                if (action.equalsIgnoreCase("Query")) {
                     deviceClient.queryReporter(ReporterType.getByName(type));
                 } else if (action.equalsIgnoreCase("Enable")) {
                     deviceClient.enableReporter(ReporterType.getByName(type));
@@ -273,12 +279,20 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    private int getSafeInteger(EditText value) {
+        if (value.getText() == null || value.getText().toString().equalsIgnoreCase("")) {
+            Log.v(TAG, "An editable text (" + getResources().getResourceName(value.getId()) + ") was invalid so we've replaced it with 0.");
+            return 0;
+        }
+
+        return Integer.valueOf(value.toString());
+    }
+
     private void sendReporterData() {
         ReporterConfig.Builder configBuilder = new ReporterConfig.Builder();
         String reporterType = (String) reporterSpinner.getSelectedItem();
 
-
-        if( "Steps".equalsIgnoreCase(reporterType) ) {
+        if ("Steps".equalsIgnoreCase(reporterType)) {
             configBuilder = configBuilder.step();
         } else if ("Accel".equalsIgnoreCase(reporterType)) {
             configBuilder = configBuilder.accel();
@@ -287,10 +301,10 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
 
-        int samplingFrequency = Integer.valueOf((sampleFrequency.getText() == null) ? "0" : sampleFrequency.getText().toString());
+        int samplingFrequency = getSafeInteger(sampleFrequency);
         DependentDataScale scale = DependentDataScale.getById(dataScaleSpinner.getSelectedItemPosition());
-        int samplesPerRec = Integer.valueOf((samplesPerRecord.getText() == null) ? "0" : samplesPerRecord.getText().toString());
-        int maxRecs = Integer.valueOf((maxRecords.getText() == null) ? "0" : maxRecords.getText().toString());
+        int samplesPerRec = getSafeInteger(samplesPerRecord);
+        int maxRecs = getSafeInteger(maxRecords);
 
         configBuilder = configBuilder.samplingFrequency(samplingFrequency)
                 .dependentDataScale(scale)
